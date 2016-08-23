@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" data-framework="backbonejs">
+    <head>
+        <meta charset="utf-8">
+        <title>Molder - simple, graphical data and database manipulation tool</title>
+        <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/default.css" rel="stylesheet">
+        <script data-main="/src/app" src="/lib/require.js"></script>
+        <script src="/lib/jquery.js"></script> <!-- TODO remove this and bootstrap import when possible -->
+        <script src="/lib/bootstrap/js/bootstrap.js"></script>
+    </head>
+    <body class="container-fluid">
+        <section id="mainArea" class="row">
+            <div id="nodeListing" class="col-lg-2">
+            node listing
+            </div>
+            <div id="graphArea" class="col-lg-10">
+            </div>
+        </section>
+        <section id="detailsArea">
+            <div id="detailsAreaTabs">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#overviewPane" aria-controls="overviewPane" role="tab" data-toggle="tab">Overview</a></li>
+                    <li role="presentation"><a href="#editorPane" aria-controls="editorPane" role="tab" data-toggle="tab">Editor</a></li>
+                    <li role="presentation"><a href="#inputSamplePane" aria-controls="inputSamplePane" role="tab" data-toggle="tab">Input Sample</a></li>
+                    <li role="presentation"><a href="#outputSamplePane" aria-controls="outputSamplePane" role="tab" data-toggle="tab">Output Sample</a></li>
+                    <li role="presentation"><a href="#errorMessagesPane" aria-controls="errorMessagesPane" role="tab" data-toggle="tab">Error Messages</a></li>
+                    <li role="presentation"><a href="#documentationPane" aria-controls="documentationPane" role="tab" data-toggle="tab">Documentation</a></li>
+                </ul>
+            </div>
+            <div id="detailsAreaContent" class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="overviewPane"> Details area content </div>
+                <div role="tabpanel" class="tab-pane" id="editorPane">Editor</div>
+                <div role="tabpanel" class="tab-pane" id="inputSamplePane">Input sample</div>
+                <div role="tabpanel" class="tab-pane" id="outputSamplePane">Output sample</div>
+                <div role="tabpanel" class="tab-pane" id="errorMessagesPane">Error msgs</div>
+                <div role="tabpanel" class="tab-pane" id="documentationPane">documentation</div>
+            </div>
+        </section>
+    </body>
+</html>

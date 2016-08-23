@@ -1,0 +1,34 @@
+{
+    "nodes": {
+        "csv-input": {
+            "icon": "csv-input.png"
+        },
+        "csv-output": {
+            "icon": "csv-output.png"
+        },
+        "identity": {
+            "icon": "identity.png"
+        },
+        "drop-columns": {
+            "icon": "drop-columns.png"
+        }
+
+    },
+    "categories": {
+        "input": {
+            "name": "External inputs",
+            "description": "Nodes with external input sources, such as a database, csv-file, etc.",
+            "nodes": [ "csv-input" ]
+        },
+        "outputs": {
+            "name": "External outputs",
+            "description": "Nodes outputting the data to external targets such as a database, csv-file, etc.",
+            "nodes": [ "csv-output" ]
+        },
+        "transforms": {
+            "name": "Transformations",
+            "description": "Nodes transforming the input data in some way and can output the result(s) to other nodes",
+            "nodes": [ "identity", "drop-columns" ]
+        }
+    }
+}

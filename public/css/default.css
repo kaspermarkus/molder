@@ -1,0 +1,121 @@
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+#mainArea {
+    /*display: flex;
+    flex: 1;*/
+}
+
+#nodeListing {
+    /*width: 250px;*/
+    background: #bcb8b4;
+    padding: 10px 15px 10px 10px;
+    padding-left: 15px;
+    text-transform: uppercase;
+}
+
+#graphArea {
+    min-height: 400px;
+    /*flex: 1;  Grow to rest of container */
+    background: #ccc;
+}
+
+#detailsAreaTabs {
+    height: 50px;
+    background: #FFF;
+}
+
+#detailsAreaContent {
+    height: 250px;
+    background: #FFF;
+}
+
+#detailsArea {
+
+}
+
+.item { /* TODO Deleme */
+    height: 100px;
+    width: 100px;
+    background-color: #BBA8C0;
+    border: 2px solid black;
+    border-radius: 5px;
+    position: absolute;
+}
+
+/******************************************************************
+/*********************** NODE LISTING STUFF  **********************
+/*******************************************************************/
+.nodePrototype {
+    z-index: 100;
+}
+
+#nodeListing ul.nodeCategories {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#nodeListing ul.nodeCategories h3 {
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom: 1px solid #333;
+    margin-bottom: 5px;
+}
+
+#nodeListing ul.nodeList {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#nodeListing ul.nodeList li {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#nodeListing ul.nodeList li img {
+    width: 25px;
+    height: 25px;
+    margin-right: 5px;
+}
+
+
+/***************************************************************************************************
+/****************** Graph stuff ********************************************************************
+/**************************************************************************************************/
+#graphArea .node {
+    height: 100px;
+    width: 100px;
+    background-color: #ADB6A9;
+    border: 2px solid black;
+    border-radius: 5px;
+    font-size: 15px;
+    position: absolute;
+    text-align: center;
+}
+
+#graphArea .node img {
+    width: 50px;
+    height: 50px;
+}
+
+#graphArea .node.selected {
+    background-color: #98A294;
+    border: 5px solid black;
+    border-style: inset;
+}
+
+
+/***************************************************************************************************
+/****************** Node editor stuff **************************************************************
+/**************************************************************************************************/
+.fileField-group label {
+    float: left;
+    margin-right: 10px;
+}
+
+#editorPane .warningBanner {
+    padding: 10px;
+    font-weight: 500;
+}

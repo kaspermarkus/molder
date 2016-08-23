@@ -1,0 +1,30 @@
+{
+  "name": "metanance",
+  "version": "0.0.1",
+  "homepage": "https://github.com/anderslm/metanance",
+  "authors": [
+    "Anders Ladegaard Marchsteiner <alm.anma@gmail.com>"
+  ],
+  "description": "Pavement maintenance optimized by metaheuristics",
+  "main": "index.html",
+  "moduleType": [
+    "amd"
+  ],
+  "license": "Metanance",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "requirejs": "~2.1.15",
+    "backbone": "~1.2.1",
+    "jquery": "~2.1.1",
+    "jquery-ui": "~1.12.0",
+    "requirejs-text": "~2.0.12",
+    "jsPlumb": "~2.1.4"
+  }
+}
