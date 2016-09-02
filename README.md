@@ -262,6 +262,7 @@ EXTRAS
 * Planlæg en eller flere mål ift. et datasæt som man gerne vil have manipulere på den ene eller anden måde
 * Revurder milestones
 * Revurder first 'release'
+* Stresstest backend for at sikre at den kan håndtere det (ie. er lazy)... Hvis jeg ikke kan håndtere store datamængder er det hele lidt ligegyldigt.
 
 #### Milestone 12: Multi-input nodes (3w) ####
 
@@ -312,7 +313,7 @@ INPUT/OUTPUT NODES:
 * NODE - Excel input **MVP**
 * NODE - Excel output **MVP**
 * NODE - Console output: **MVP**
-*
+
 * Create function to merge two columns: "fname" "lname" -> "fullname"
 * Extend drop column function to be able to drop multiple columns (ie. take list of column names)
 * Create data -> merge("fname", "lname" -> "fullname") -> drop("fname", "lname") -> stdout

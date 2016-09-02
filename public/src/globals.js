@@ -11,13 +11,45 @@ define([], function() {
         // dataType: "json",
         async: true,
         success : function (result) {
-            window.alert("It fucking worked:\n " + JSON.stringify(result));
-            session.trigger("tryFinished", result);
+            session.trigger("samplingFinished", result);
         },
-        error: function (err) {
-            window.alert("Error testing the mold...\nTODO: Proper error handling here!");
+        error: function (result) {
+            session.trigger("samplingFinished", result.responseJSON);
+            // TODO probably more handling here
         }
       });
+    },
+
+    /* given the session (with sampleData) and a node-id
+     * this function will return the sample data that goes
+     * out from the given node
+     *
+     * TODO: Support multiple outputs from node */
+    getOutputSampleFrom: function (session, id) {
+        var data = session.sampleData[id];
+        for (var con in data) {
+          return data[con];
+        }
+        return undefined;
+    },
+
+    getSample: function (session, from, to) {
+      return (session.sampleData[from] ? session.sampleData[from][to] : undefined);
+    },
+
+    /* given the session (with sampleData) and a node-id
+     * this function will return the sample data that
+     * goes into the node
+     *
+     * TODO: Support multiple inputs to node */
+    getInputSampleTo: function (session, id) {
+        var outs;
+        for (var otherId in session.sampleData) {
+            if (id in session.sampleData[otherId]) {
+                return session.sampleData[otherId][id];
+            }
+        }
+        return undefined;
     }
   };
 

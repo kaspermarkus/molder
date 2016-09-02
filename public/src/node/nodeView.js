@@ -1,4 +1,4 @@
-define(['backbone', 'session', 'jsplumb', "text!./nodeIconTemplate.html", "jquery-ui"], function (Backbone, Session, jsplumb, IconTemplate) {
+define(['backbone', 'session', 'globals', 'jsplumb', "text!./nodeIconTemplate.html", "jquery-ui"], function (Backbone, Session, Globals, jsplumb, IconTemplate) {
   'use strict';
 
   /*
@@ -6,7 +6,6 @@ define(['backbone', 'session', 'jsplumb', "text!./nodeIconTemplate.html", "jquer
   */
   var NodeView = Backbone.View.extend({
     iconTemplate: _.template(IconTemplate),
-    el: $("#nodeListing"),
     session: null,
 
     initialize: function (options) {
@@ -18,14 +17,24 @@ define(['backbone', 'session', 'jsplumb', "text!./nodeIconTemplate.html", "jquer
         html.click(function () {
             session.trigger("nodeSelected", { node: node, html: html, id: id });
         });
+        html.find(".statusIcon").hide();
 
         $("#graphArea").append(html);
+        this.setElement("#graphArea #" + id);
 
         this.addPlumbing(node);
 
-
         // add node to session:
-        session.addNode(id, node);
+        session.addNode(id, node, this);
+        Globals.tryMold(session);
+    },
+
+    showError: function (error) {
+        this.$el.find(".errorIcon").show();
+    },
+
+    showWarning: function (warning) {
+        this.$el.find(".warningIcon").show();
     },
 
     createNode: function (nodeId, nodeType) {
@@ -48,7 +57,7 @@ define(['backbone', 'session', 'jsplumb', "text!./nodeIconTemplate.html", "jquer
         // create node html
         var html = this.iconTemplate();
         html = $(html).css(position).addClass("item").attr("id", node.id);
-        html.find("img").attr('src', "imgs/" + this.session.nodePrototypes[node.type].ui.icon);
+        html.find("img.nodeTypeIcon").attr('src', "imgs/" + this.session.nodePrototypes[node.type].ui.icon);
         html.find("label").text(node.name);
         return html;
     },

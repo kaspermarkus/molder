@@ -1,18 +1,21 @@
 requirejs.config({
-  baseUrl: '/lib',
+  baseUrl: 'lib',
   paths: {
     app: '../src',
     globals: '../src/globals',
     session: '../src/Session',
     'bootstrap': '../lib/bootstrap/js/bootstrap',
+    'bootstrap-select': '../lib/bootstrap-select',
     'jsPlumb': '../lib/jsPlumb'
   },
   shim: {
-    'bootstrap': ['jquery', 'jquery-ui']
+    'bootstrap': ['jquery', 'jquery-ui'],
+    'jquery-sortable-min': ['jquery']
   }
 });
 
-define(['backbone', 'globals', 'session', 'jsplumb', 'app/nodeListing/NodeListingView', 'jquery-ui'], function(Backbone, Globals, Session, jsplumb, NodeListingView) {
+define(['backbone', 'globals', 'session', 'jsplumb', 'app/nodeListing/NodeListingView', 'jquery', 'jquery-ui', 'jquery-sortable-min', 'bootstrap'],
+  function(Backbone, Globals, Session, jsplumb, NodeListingView) {
   'use strict';
 
   var App = Backbone.Router.extend({
@@ -46,6 +49,7 @@ define(['backbone', 'globals', 'session', 'jsplumb', 'app/nodeListing/NodeListin
         console.log("Initializing jsPlumb");
         jsPlumb.setContainer($("#graphArea"));
       }, this));
+      Globals.tryMold(Session.currentSession());
     },
 
     initNodeMetadata: function () {
@@ -83,25 +87,14 @@ define(['backbone', 'globals', 'session', 'jsplumb', 'app/nodeListing/NodeListin
     events: _.extend({}, Backbone.Events),
 
     initNodeListing: function() {
-      // var login = this.views.login;
-
-      // if(login) {
-      //   login.initialize();
-      //   this.content.append(login.el);
-      //   $('input').first().focus();
-      // } else {
         this.nodeListing = new NodeListingView();
-
-      //   this.content.append(this.views.login.el);
-
-      //   $('input').first().focus();
-      // }
     }
 
 
   });
 
   window.App = new App();
+  window.App.init();
 
   Backbone.history.start({ pushState: true });
 });

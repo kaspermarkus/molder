@@ -82,6 +82,55 @@ body {
 
 
 /***************************************************************************************************
+/****************** Quick Bar stuff ****************************************************************
+/**************************************************************************************************/
+#quickBar .warningIcon {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 100;
+}
+
+#quickBar .errorIcon {
+    width: 85px;
+    height: 85px;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+
+#quickBar .playIcon {
+    width: 85px;
+    height: 85px;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+
+#quickBar .loadingIcon {
+    width: 30px;
+    height: 30px;
+    z-index: 100;
+    left: 20px;
+    top: 25px;
+    position: absolute;
+}
+
+div#quickBar {
+    position: absolute;
+    z-index: 1000;
+    right: 10px;
+    height: 90px;
+    top: 10px;
+    background-color: #EEE;
+    border: 2px solid #9f9f9f;
+    border-radius: 40px;
+    width: 150px;
+}
+
+/***************************************************************************************************
 /****************** Graph stuff ********************************************************************
 /**************************************************************************************************/
 #graphArea .node {
@@ -95,6 +144,12 @@ body {
     text-align: center;
 }
 
+#graphArea .nodePrototype img {
+    width: 100px;
+    height: 100px;
+    margin-right: 5px;
+}
+
 #graphArea .node img {
     width: 50px;
     height: 50px;
@@ -106,6 +161,23 @@ body {
     border-style: inset;
 }
 
+#graphArea .selectedConnection path { /* lines + arrow styling */
+    stroke: #000;
+    fill: #000;
+}
+
+#graphArea .selectedConnection svg circle { /* endpoint styling */
+    stroke: #000;
+    fill: #000;
+}
+
+#graphArea .node .statusIcon {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    right: 5px;
+    top: -15px;
+}
 
 /***************************************************************************************************
 /****************** Node editor stuff **************************************************************
@@ -118,4 +190,47 @@ body {
 #editorPane .warningBanner {
     padding: 10px;
     font-weight: 500;
+}
+
+/*************** Multi column picker ********************/
+#editorPane .dragging, #editorPane .dragging * {
+  cursor: move !important;
+}
+
+#editorPane .dragged {
+  position: absolute;
+  opacity: 0.5;
+  z-index: 2000;
+}
+
+#editorPane li {
+    display: block;
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid #cccccc;
+    color: #0088cc;
+    background: #eeeeee;
+}
+
+#editorPane ol {
+    -webkit-padding-start: 5px;
+    border: 1px solid #999999;
+    padding: 0;
+}
+#editorPane ol li.placeholder {
+  position: relative;
+}
+#editorPane ol li.placeholder:before {
+  position: absolute;
+}
+
+.columnsSelectorField ol {
+    min-height: 50px;
+}
+
+.columnsSelectorField img {
+    width: 10px;
+    float: right;
+    margin-top: 5px;
+    cursor: pointer;
 }
