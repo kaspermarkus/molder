@@ -1,6 +1,7 @@
-<div class="">
-    <div class="columnsSelectorField row" id="<%= id %>">
+<div class="form-group columnsSeletorField-group <%= id %>">
+    <div class="columnsSelectorField row">
         <div class='columns col-md-4'>
+            <label class="control-label" for="<%= id %>">Selected Columns</label>
             <div class="addingArea">
                 <select class="selectpicker" data-live-search="true">
                     <option value="myopt">Test</option>
@@ -8,12 +9,8 @@
                 <input type="button" class="btn btn-default addColumn" value="Add to list" />
             </div>
             <div class="selectedArea">
-                <label>Selected Columns</label>
-                <ol class='columns'>
-                  <!-- <li>First</li>
-                  <li>Second</li>
-                  <li>Third</li> -->
-                </ol>
+                <ol class="columns form-control" id="<%= id %>"></ol>
+                <div class="clearfix help-block"></div>
             </div>
         </div>
     </div>

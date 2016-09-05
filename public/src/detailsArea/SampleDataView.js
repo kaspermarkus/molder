@@ -1,17 +1,41 @@
-define(['backbone'], function (Backbone) {
+define(['backbone', 'globals'], function (Backbone, Globals) {
   'use strict';
 
   /*
   * View for setting up the objective function and the budget.
   */
   var SampleDataView = Backbone.View.extend({
+    fromId: undefined,
+    toId: undefined,
     headers: null,
     data: null,
 
-    updateData: function (data) {
-      this.headers = data.columns;
-      this.data = data.data;
-      this.render();
+    initialize: function (options) {
+      this.el = options.el;
+      this.session = options.session;
+    },
+
+    /**
+     * returns false if no data is present in sample
+     */
+    refreshData: function (fromId, toId) {
+      this.fromId = fromId;
+      this.toId = toId;
+      return this.refreshSample();
+    },
+
+    refreshSample: function () {
+      console.log("Refreshing sample!!");
+      var sample = Globals.getSample(this.session, this.fromId, this.toId);
+
+        if (sample === undefined || sample === null) {
+          return false;
+        }
+
+        this.data = sample.data;
+        this.headers = sample.columns,
+        this.render();
+        return true;
     },
 
     orderHeaders: function (headers) {
@@ -56,9 +80,19 @@ define(['backbone'], function (Backbone) {
       this.$el.html(this.table);
     },
 
+    hasData: function () {
+      return (this.headers !== undefined && this.headers !== null);
+    },
+
     destroy: function () {
-      //TODO
-    }
+        // this.$el.find("#nodeEditor").remove();
+        this.unbind();
+        this.undelegateEvents();
+        this.stopListening();
+        // this.session.off("samplingFinished");
+        console.log("UNBINDING EVENTS FOR SAMPLE: " + this.fromId + " -> " + this.toId);
+        this.remove();
+      }
   });
   return SampleDataView;
 });

@@ -11,10 +11,10 @@ define([], function() {
         // dataType: "json",
         async: true,
         success : function (result) {
-            session.trigger("samplingFinished", result);
+            session.samplingFinished(result);
         },
         error: function (result) {
-            session.trigger("samplingFinished", result.responseJSON);
+            session.samplingFinished(result.responseJSON);
             // TODO probably more handling here
         }
       });
@@ -34,7 +34,13 @@ define([], function() {
     },
 
     getSample: function (session, from, to) {
-      return (session.sampleData[from] ? session.sampleData[from][to] : undefined);
+      if (to === undefined) {
+        return this.getOutputSampleFrom(session, from);
+      } else if (from === undefined) {
+        return this.getInputSampleTo(session, to);
+      } else {
+        return (session.sampleData[from] ? session.sampleData[from][to] : undefined);
+      }
     },
 
     /* given the session (with sampleData) and a node-id

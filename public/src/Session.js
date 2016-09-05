@@ -62,17 +62,25 @@ define(['backbone', 'globals', 'app/detailsArea/DetailsArea', 'app/mainGraph/Mai
 
     getNodePrototype: function (nodeType) {
         return this.nodePrototypes[nodeType];
+    },
+
+    samplingFinished: function (data) {
+      session.errors = data.errors;
+      session.warnings = data.warnings;
+      session.sampleData = data.data;
+
+      this.trigger("samplingFinished", data);
     }
   };
+
+  _.extend(session, BackBone.Events);
 
   var detailsArea = new DetailsArea({ session: session });
   var mainGraph = new MainGraph({ session: session });
   var quickBar = new QuickBar({ session: session });
 
-  _.extend(session, BackBone.Events);
-
   session.on("nodeSelected", function (options) {
-    detailsArea.nodeSelected(options.id, options.node);
+    detailsArea.setNodeSelected(options.id, options.node);
     mainGraph.unselectNodes();
     mainGraph.unselectConnections();
     mainGraph.selectNode(options.id);
@@ -80,7 +88,7 @@ define(['backbone', 'globals', 'app/detailsArea/DetailsArea', 'app/mainGraph/Mai
   });
 
   session.on("connectionSelected", function (con) {
-    detailsArea.connectionSelected(con);
+    detailsArea.setConnectionSelected(con);
     mainGraph.unselectNodes();
     mainGraph.unselectConnections();
     mainGraph.selectConnection(con);
@@ -91,10 +99,6 @@ define(['backbone', 'globals', 'app/detailsArea/DetailsArea', 'app/mainGraph/Mai
   });
 
   session.on("samplingFinished", function (data) {
-    session.errors = data.errors;
-    session.warnings = data.warnings;
-    session.sampleData = data.data;
-
     mainGraph.updateStatus();
     detailsArea.updateStatus();
     quickBar.updateStatus();

@@ -32,10 +32,6 @@ define(["backbone", "session", "jsplumb",
 
     getValue: function () {
         return this.$("#" + this.fieldName).is(':checked');
-    },
-
-    destroy: function () {
-        // TODO unbind, etc.
     }
   });
 

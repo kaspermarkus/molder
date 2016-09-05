@@ -15,15 +15,18 @@ define(['backbone', 'session', 'globals', 'jsplumb', "app/nodeEditor/NodeEditor"
     el: "#detailsArea",
 
     initialize: function (options) {
-        _.bindAll(this, 'nodeSelected', 'connectionSelected', 'errorSelected');
+        _.bindAll(this, 'setNodeSelected', 'setConnectionSelected', 'errorSelected');
         this.session = options.session;
         this.inputSampleView = new SampleDataView({
+            session: this.session,
             el: "#inputSamplePane",
         });
         this.outputSampleView = new SampleDataView({
+            session: this.session,
             el: "#outputSamplePane",
         });
         this.connectionSampleView = new SampleDataView({
+            session: this.session,
             el: "#connectionSamplePane",
         });
         this.errorMessagesView = new ErrorMessagesView({
@@ -31,53 +34,55 @@ define(['backbone', 'session', 'globals', 'jsplumb', "app/nodeEditor/NodeEditor"
             session: this.session
         });
 
-        this.nothingSelected();
+        this.setNothingSelected();
+        this.listenTo(this.session, "samplingFinished", _.bind(this.refreshSample, this));
+    },
+
+    refreshSample: function () {
+        if (this.selected.nodeId) {
+            this.updateOutputSampleView(this.selected.nodeId);
+            this.updateInputSampleView(this.selected.nodeId);
+        } else if (this.selected.connection) {
+            var con = this.selected.connection;
+            this.updateConnectionSampleView(con.sourceId, con.targetId);
+        }
     },
 
     updateStatus: function () {
         this.errorMessagesView.refreshStatus();
     },
 
-    nodeSelected: function (id, node) {
+    setNodeSelected: function (id, node) {
+        this.selected = {
+            nodeId: id
+        };
+
         this.setConnectionSampleTabVisibility(false);
-
         this.updateNodeEditor(id, node);
-
-        var outputData = Globals.getOutputSampleFrom(this.session, id);
-        if (outputData) {
-            this.updateOutputSampleView(outputData);
-        } else {
-            this.setOutputSampleTabVisibility(false);
-        }
-
-        var inputData = Globals.getInputSampleTo(this.session, id);
-        if (inputData) {
-            this.updateInputSampleView(inputData);
-        } else {
-            this.setInputSampleTabVisibility(false);
-        }
+        this.updateOutputSampleView(id);
+        this.updateInputSampleView(id);
 
         this.selectTab("editorPane");
     },
 
-    connectionSelected: function (con) {
-        this.nothingSelected();
-
-        var connectionData = Globals.getOutputSampleFrom(this.session, con.sourceId, con.targetId);
-        if (connectionData !== undefined) {
-            this.updateConnectionSampleView(connectionData);
-            this.selectTab("connectionSamplePane");
-        }
+    setConnectionSelected: function (con) {
+        this.setNothingSelected();
+        this.selected = {
+            connection: con
+        };
+        this.updateConnectionSampleView(con.sourceId, con.targetId);
+        this.selectTab("connectionSamplePane");
     },
 
     errorSelected: function (nodeId) {
         if (nodeId === undefined) {
-            this.nothingSelected();
+            this.setNothingSelected();
         }
         this.selectTab("errorMessagesPane");
     },
 
-    nothingSelected: function () {
+    setNothingSelected: function () {
+        this.selected = {}
         this.setConnectionSampleTabVisibility(false);
         this.setOutputSampleTabVisibility(false);
         this.setInputSampleTabVisibility(false);
@@ -93,7 +98,6 @@ define(['backbone', 'session', 'globals', 'jsplumb', "app/nodeEditor/NodeEditor"
 
         if (this.nodeEditor !== null) {
             this.nodeEditor.destroy();
-            // TODO unbind, etc. move to destroy function
         }
 
         this.nodeEditor = new NodeEditor({
@@ -107,19 +111,22 @@ define(['backbone', 'session', 'globals', 'jsplumb', "app/nodeEditor/NodeEditor"
         this.setNodeEditorTabVisibility(true);
     },
 
-    updateOutputSampleView: function (data) {
-        this.outputSampleView.updateData(data);
-        this.setOutputSampleTabVisibility(true);
+    updateOutputSampleView: function (nodeId) {
+        var hasSample = this.outputSampleView.refreshData(nodeId, undefined);
+        // show tab if there is data to show
+        this.setOutputSampleTabVisibility(hasSample);
     },
 
-    updateInputSampleView: function (data) {
-        this.inputSampleView.updateData(data);
-        this.setInputSampleTabVisibility(true);
+    updateInputSampleView: function (nodeId) {
+        var hasSample = this.inputSampleView.refreshData(undefined, nodeId);
+        // show tab if there is data to show
+        this.setInputSampleTabVisibility(hasSample);
     },
 
-    updateConnectionSampleView: function (data) {
-        this.connectionSampleView.updateData(data);
-        this.setConnectionSampleTabVisibility(true);
+    updateConnectionSampleView: function (sourceId, targetId) {
+        var hasSample = this.connectionSampleView.refreshData(sourceId, targetId);
+        // show tab if there is data to show
+        this.setConnectionSampleTabVisibility(hasSample);
     },
 
     setConnectionSampleTabVisibility: function (visible) {

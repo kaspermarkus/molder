@@ -14,17 +14,19 @@ define(["backbone", "session", "jsplumb",
   var NodeEditor = Backbone.View.extend({
     node: null,
     proto: null,
-    fields: {}, // will contain a list of Field views, keyed by fieldNames
+    fields: null, // will contain a list of Field views, keyed by fieldNames
     nodeEditorTemplate: _.template(NodeEditorTemplate),
 
     initialize: function (options) {
-        _.bindAll(this, 'fieldChanged', 'revertFields', 'saveChanges');
+        _.bindAll(this, 'fieldChanged', 'revertFields', 'saveChanges', 'updatedSample');
+        this.fields = {};
         this.node = options.node;
         this.proto = options.proto;
         this.el = options.el;
         this.session = options.session;
         this.render();
         this.noChanges();
+        // this.session.on("samplingFinished", this.updatedSample);
     },
 
     render: function () {
@@ -77,6 +79,14 @@ define(["backbone", "session", "jsplumb",
         this.$el.find(".buttonsArea .updateNode").click(this.saveChanges);
     },
 
+    updatedSample: function (data) {
+        console.log("Updaed sample for: " + this.node.id);
+        for (var fieldName in this.fields) {
+            console.log("Fields: ", this.fields);
+            this.fields[fieldName].updatedSample(data);
+        }
+    },
+
     fieldChanged: function (evt, a, b) {
         // show warning
         this.$el.find(".warningBanner").text("Warning: Unsaved changes.").show();
@@ -107,7 +117,15 @@ define(["backbone", "session", "jsplumb",
 
     destroy: function () {
         this.$el.find("#nodeEditor").remove();
-        // TODO unbind, etc.
+        this.unbind();
+        this.undelegateEvents();
+        this.stopListening();
+        console.log("UNBINDING EVENTS FOR NODE: " + this.node.id);
+        for (var fieldName in this.fields) {
+            var field = this.fields[fieldName];
+            field.off("changed");
+            field.destroy();
+        }
     }
   });
 

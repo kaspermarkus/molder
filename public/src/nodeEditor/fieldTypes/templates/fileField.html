@@ -1,6 +1,7 @@
-<div class="form-group fileField-group">
-    <label><%= name %>: </label>
-    <input type="text" size="25" id="<%= id %>" value="<%= value %>" />
+<div class="form-group fileField-group <%= id %>">
+    <label class="control-label" for="<%= id %>"><%= name %>: </label>
+    <input type="text" class="form-control" size="25" id="<%= id %>" value="<%= value %>" />
+    <div class="help-block"></div>
 <!-- TODO figure out how to do a local filepicker where we just save path and dont upload file    <input type="file" id="<%= id %>" /> -->
     <!-- TODO tooltips  -->
 </div>

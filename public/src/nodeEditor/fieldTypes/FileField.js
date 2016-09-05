@@ -27,10 +27,7 @@ define(["backbone", "session", "jsplumb",
         }));
         this.$el.html(fieldTemplate);
         this.$("#" + this.fieldName).change(_.bind(this.fireChangedEvent, this));
-    },
-
-    destroy: function () {
-        // TODO unbind, etc.
+        this.checkProblems();
     }
   });
 

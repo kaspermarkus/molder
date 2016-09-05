@@ -192,6 +192,32 @@ div#quickBar {
     font-weight: 500;
 }
 
+#editorPane .help-block span {
+    font-style: italic;
+}
+
+/*************** Checkbox field *************************/
+#editorPane .checkboxField-group input {
+    display: inline-block;
+    width: initial;
+    border: initial;
+    padding: initial;
+}
+
+#editorPane .checkboxField-group input {
+    margin-right: 20px;
+}
+
+/*************** Char field *****************************/
+#editorPane .booleanField-group input {
+    width: 40px;
+    display: initial;
+}
+
+#editorPane .booleanField-group label {
+    margin-right: 20px;
+}
+
 /*************** Multi column picker ********************/
 #editorPane .dragging, #editorPane .dragging * {
   cursor: move !important;
@@ -214,9 +240,14 @@ div#quickBar {
 
 #editorPane ol {
     -webkit-padding-start: 5px;
-    border: 1px solid #999999;
     padding: 0;
+    margin-top: 7px;
 }
+
+#editorPane ol :not(.has-error) {
+    border: 1px solid #999999;
+}
+
 #editorPane ol li.placeholder {
   position: relative;
 }

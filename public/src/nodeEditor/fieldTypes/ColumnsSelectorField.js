@@ -16,6 +16,7 @@ define(["backbone", "globals", "jsplumb",
         _.bindAll(this, 'addSelected', 'removeItem');
         this.validateOptions(options);
         this.render();
+        this.checkProblems();
     },
 
     render: function () {
@@ -35,7 +36,6 @@ define(["backbone", "globals", "jsplumb",
         this.$(".addColumn").click(this.addSelected);
 
         this.refreshSelectedList();
-        // this.$("#" + this.fieldName).change(_.bind(this.fireChangedEvent, this));
     },
 
     /**
@@ -49,6 +49,14 @@ define(["backbone", "globals", "jsplumb",
             this.selectedChanged();
         }
     },
+
+    updatedSample: function (data) {
+        this.populateSelect();
+        // draw error messages:
+        this.checkProblems();
+    },
+
+
 
     removeItem: function (item) {
         var index = this.selectedColumns.indexOf(item.target.id);
@@ -101,10 +109,6 @@ define(["backbone", "globals", "jsplumb",
 
     getValue: function () {
         return this.selectedColumns;
-    },
-
-    destroy: function () {
-        // TODO unbind, etc.
     }
   });
 
