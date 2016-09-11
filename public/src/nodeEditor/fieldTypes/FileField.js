@@ -1,3 +1,5 @@
+const {dialog} = require('electron').remote;
+
 define(["backbone", "session", "jsplumb",
     "app/nodeEditor/fieldTypes/Field",
     "text!./templates/fileField.html",
@@ -15,6 +17,7 @@ define(["backbone", "session", "jsplumb",
     template: _.template(Template),
 
     initialize: function (options) {
+        _.bindAll(this, 'showDialog');
         this.validateOptions(options);
         this.render();
     },
@@ -26,8 +29,21 @@ define(["backbone", "session", "jsplumb",
             value: this.node.fields[this.fieldName]
         }));
         this.$el.html(fieldTemplate);
-        this.$("#" + this.fieldName).change(_.bind(this.fireChangedEvent, this));
+        // this.$("#" + this.fieldName).change(_.bind(this.fireChangedEvent, this));
+        this.$("#" + this.fieldName).click(this.showDialog);
         this.checkProblems();
+    },
+
+    showDialog: function () {
+        var currentVal = this.$("#" + this.fieldName).val();
+        var tmp = dialog.showOpenDialog({
+          properties: ['openFile'],
+          defaultPath: currentVal
+        });
+        if (tmp) {
+            this.$("#" + this.fieldName).val(tmp);
+            this.fireChangedEvent();
+        }
     }
   });
 

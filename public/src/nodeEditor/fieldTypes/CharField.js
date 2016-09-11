@@ -11,11 +11,13 @@ define(["backbone", "session", "jsplumb",
   var CharField = Field.extend({
     fieldName: null,
     fieldInfo: null,
+    maxLength: null,
     node: null,
     charFieldTemplate: _.template(CharFieldTemplate),
 
     initialize: function (options) {
         this.validateOptions(options);
+        this.maxLength = options.maxLength || 2;
         this.render();
     },
 
@@ -23,7 +25,9 @@ define(["backbone", "session", "jsplumb",
         var fieldTemplate = $(this.charFieldTemplate({
             id: this.fieldName,
             name: this.fieldInfo.name,
-            value: this.node.fields[this.fieldName]
+            value: this.node.fields[this.fieldName],
+            maxLength: this.maxLength,
+
         }));
         this.$el.html(fieldTemplate);
         this.$("#" + this.fieldName).change(_.bind(this.fireChangedEvent, this));

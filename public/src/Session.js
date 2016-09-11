@@ -77,7 +77,7 @@ define(['backbone', 'globals', 'app/detailsArea/DetailsArea', 'app/mainGraph/Mai
 
   var detailsArea = new DetailsArea({ session: session });
   var mainGraph = new MainGraph({ session: session });
-  var quickBar = new QuickBar({ session: session });
+  var quickBar = new QuickBar({ session: session, el: "#quickBar" });
 
   session.on("nodeSelected", function (options) {
     detailsArea.setNodeSelected(options.id, options.node);

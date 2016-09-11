@@ -5,7 +5,7 @@ define([], function() {
     tryMold: function (session) {
         $.ajax({
         type: "POST",
-        url: Globals.backend + "/run",
+        url: Globals.backend + "/try",
         data: JSON.stringify(session.mold),
         contentType: "application/json",
         // dataType: "json",

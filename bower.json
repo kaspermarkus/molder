@@ -27,5 +27,8 @@
     "requirejs-text": "~2.0.12",
     "jsPlumb": "~2.1.4",
     "bootstrap-select": "~1.11.0"
+  },
+  "devDependencies": {
+    "qunit": "~2.0.1"
   }
 }

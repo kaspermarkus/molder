@@ -6,11 +6,12 @@ define(['backbone', 'session', 'globals', "text!./quickBar.html",
   * View for setting up the objective function and the budget.
   */
   var NodePrototypeView = Backbone.View.extend({
-    el: $("#quickBar"),
+    // el: $("#quickBar"),
     session: null,
     template: _.template(Template),
 
     initialize: function (options) {
+        this.el = options.el;
         this.session = options.session;
         this.render();
     },
@@ -28,7 +29,8 @@ define(['backbone', 'session', 'globals', "text!./quickBar.html",
         this.setIconVisibility(".errorIcon", hasErrors);
         this.setIconVisibility(".playIcon", !hasErrors);
 
-        this.setIconVisibility(".warningIcon", (this.session.warnings.length !== 0));
+        // only show warning icon if there are no errors AND there are warnings
+        this.setIconVisibility(".warningIcon", (this.session.warnings.length > 0 && !hasErrors));
     },
 
     setLoading: function (loading) {

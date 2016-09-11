@@ -25,7 +25,6 @@ define(['backbone', 'globals'], function (Backbone, Globals) {
     },
 
     refreshSample: function () {
-      console.log("Refreshing sample!!");
       var sample = Globals.getSample(this.session, this.fromId, this.toId);
 
         if (sample === undefined || sample === null) {
