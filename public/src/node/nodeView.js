@@ -7,13 +7,28 @@ define(['backbone', 'session', 'globals', 'jsplumb', "text!./nodeIconTemplate.ht
   var NodeView = Backbone.View.extend({
     iconTemplate: _.template(IconTemplate),
     session: null,
+    id: null,
 
     initialize: function (options) {
-        var session = Session.currentSession();
+        // var session = Session.currentSession();
+        var session = options.session;
         this.session = session;
-        var id = session.getNewNodeId();
-        var node = this.createNode(id, options.nodeType);
-        var html = this.createHTML(node, options.position);
+
+        var html, node, id;
+
+        // if we're loading a mold, we already have most info about node initialized
+        if (options.fromLoad) {
+            id = options.nodeId;
+            node = options.node;
+            html = this.createHTML(node, options.position);
+        } else {
+            id = session.getNewNodeId();
+            node = this.createNode(id, options.nodeType);
+            html = this.createHTML(node, options.position);
+        }
+        this.id = id;
+        this.node = node;
+
         html.click(function () {
             session.trigger("nodeSelected", { node: node, html: html, id: id });
         });
@@ -24,9 +39,11 @@ define(['backbone', 'session', 'globals', 'jsplumb', "text!./nodeIconTemplate.ht
 
         this.addPlumbing(node);
 
-        // add node to session:
-        session.addNode(id, node, this);
-        Globals.tryMold(session);
+        if (!options.fromLoad) {
+            // only add to session if we're not loading - else they would already be added to session
+            session.addNode(id, node, this);
+            Globals.tryMold(session);
+        }
     },
 
     showError: function (error) {
@@ -76,6 +93,7 @@ define(['backbone', 'session', 'globals', 'jsplumb', "text!./nodeIconTemplate.ht
             // add endpoints:
             if (metadata["out-points"] !== 0) {
                 jsPlumb.addEndpoint(node.id, {
+                    uuid: this.id + "-source0",
                     anchors: ["Right"],
                     isSource: true,
                     isTarget: false,
@@ -89,15 +107,21 @@ define(['backbone', 'session', 'globals', 'jsplumb', "text!./nodeIconTemplate.ht
             }
             if (metadata["in-points"] !== 0) {
                 jsPlumb.addEndpoint(node.id, {
+                    uuid: this.id + "-target0",
                     anchors: ["Left"],
                     isSource: false,
                     isTarget: true,
                     connector: ["Flowchart"],
-                    // maxConnections: 1,
+                    maxConnections: 1,
                     hoverPaintStyle:{ fillStyle:"lightblue" }
                 });
             }
         }, this));
+    },
+
+    destroy: function () {
+        jsPlumb.remove(this.id);
+        this.remove();
     }
   });
 

@@ -1,12 +1,15 @@
-define(['backbone', 'globals', 'app/detailsArea/DetailsArea', 'app/mainGraph/MainGraph', 'app/quickBar/QuickBar'], function(BackBone, Globals, DetailsArea, MainGraph, QuickBar) {
+var fs = require('fs');
+
+define(['backbone', 'globals', 'app/detailsArea/DetailsArea', 'app/mainGraph/MainGraph', 'app/quickBar/QuickBar', 'app/node/nodeView', 'jsplumb'], function(BackBone, Globals, DetailsArea, MainGraph, QuickBar, NodeView, jsPlumb) {
   var session = {
     nodePrototypes: {},
     idCount: 0,
     mold: {},
     sampleData: {},
-    errors: {},
-    warnings: {},
+    errors: [],
+    warnings: [],
     nodeViews: {},
+    currentMoldFile: undefined,
 
     getNewNodeId: function () {
         return "node" + (this.idCount++);
@@ -21,14 +24,14 @@ define(['backbone', 'globals', 'app/detailsArea/DetailsArea', 'app/mainGraph/Mai
         var fromNode = this.mold[fromId];
         if (fromNode.outputs === null) {
           fromNode.outputs = [toId];
-        } else {
+        } else if (fromNode.outputs.indexOf(toId) === -1) { // dont double add
           fromNode.outputs.push(toId);
         }
 
         var toNode = this.mold[toId];
         if (toNode.inputs === null) {
           toNode.inputs = [fromId];
-        } else {
+        } else if (fromNode.inputs.indexOf(fromId) === -1) {
           toNode.inputs.push(fromId);
         }
         Globals.tryMold(session);
@@ -70,6 +73,103 @@ define(['backbone', 'globals', 'app/detailsArea/DetailsArea', 'app/mainGraph/Mai
       session.sampleData = data.data;
 
       this.trigger("samplingFinished", data);
+    },
+
+    saveMold: function (filename) {
+      if (filename) {
+        console.log("SAVING AS ", filename);
+        this.currentMoldFile = filename;
+      }
+
+      if (!this.currentMoldFile) {
+        console.log("ERROROROROOROROR: trying to save mold but dont know where");
+      } else {
+        console.log("Saving to ", this.currentMoldFile);
+        var toSave = {
+          mold: this.mold,
+          uiMetadata: {},
+          metadata: {
+            idCount: this.idCount
+          }
+        };
+
+        // Add position info:
+        for (var nodeId in this.nodeViews) {
+          toSave.uiMetadata[nodeId] = {
+            position: this.nodeViews[nodeId].$el.position()
+          };
+        }
+
+        // write to filesystem:
+        console.log("SAVING MOLD: " + JSON.stringify(toSave, null, 2));
+        fs.writeFileSync(this.currentMoldFile, JSON.stringify(toSave, null, 2), { flag: "w" });
+      }
+    },
+    clearMold: function (metadata) {
+      this.mold = {};
+      this.sampleData = {};
+      this.errors = [];
+      this.warnings = [];
+      for (var nodeId in this.nodeViews) {
+        this.nodeViews[nodeId].destroy();
+      }
+      this.currentMoldFile = undefined;
+      this.idCount = metadata.idCount;
+    },
+
+    getSourceEndpointUUID: function (nodeId) {
+      var endpoints = jsPlumb.getEndpoints(nodeId);
+      for (var index in endpoints) {
+        var endpoint = endpoints[index];
+        if (endpoint.isSource) {
+          return jsPlumb.getEndpoints(nodeId)[index].getUuid();
+        }
+      }
+    },
+
+    getTargetEndpointUUID: function (nodeId) {
+      var endpoints = jsPlumb.getEndpoints(nodeId);
+      for (var index in endpoints) {
+        var endpoint = endpoints[index];
+        if (endpoint.isTarget) {
+          return jsPlumb.getEndpoints(nodeId)[index].getUuid();
+        }
+      }
+    },
+
+    loadMold: function (filename) {
+      console.log("LOADING ", filename);
+      var content = fs.readFileSync(filename).toString();
+      var json = JSON.parse(content);
+
+      // clear current mold:
+      this.clearMold(json.metadata);
+
+      this.mold = json.mold;
+      this.currentMoldFile = filename;
+      // draw the nodes onto the screen:
+      for (var nodeId in this.mold) {
+        this.nodeViews[nodeId] = new NodeView({
+            fromLoad: true,
+            position: json.uiMetadata[nodeId].position,
+            node: json.mold[nodeId],
+            nodeId: nodeId,
+            session: this
+        });
+      }
+      // draw the connections on the screen
+      jsPlumb.ready(_.bind(function() {
+        for (var nodeId in this.mold) {
+          var node = this.mold[nodeId];
+          for (var toIndex in node.outputs) {
+            jsPlumb.connect({
+              uuids: [ this.getSourceEndpointUUID(nodeId), this.getTargetEndpointUUID(node.outputs[toIndex])]
+            });
+          }
+
+        }
+      }, this));
+      Globals.tryMold(this);
     }
   };
 

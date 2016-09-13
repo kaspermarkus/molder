@@ -2,26 +2,6 @@
 
 #### Milestone X: Backend basics - input/output nodes and pipes (45h) (*[16h45m]*) ####
 
-
-* Run (5h)
-  * First do validation call.
-  * If no errors, process the mold.
-  * On errors, break the process and return
-  * run from UI on clicking the play button
-
-* Tests of basic UI
-
-* NODE - CSV output
-  * write tests for UI
-  * write tests for backend
-
-* NODE - CSV input:
-  * write tests for UI
- 
-* NODE - drop column
-  * write tests for UI
-  * write tests for backend
-
 * Delete arrow between two nodes + tests
 ** Find suitable place for deletion: menuitem? GUI menu item? Under general? UI symbol
 ** Confirmation if sensible
@@ -36,30 +16,40 @@
 ** update UI
 ** Trigger try event
 
-* Ability to save a pipe
-** Save menu item
-** Event triggered on click + ctrl+s/cmd+s
-** show file system if not saved
-** Save if already has file
-** Store filename on first save
-** Save coordinates for pipes
+* Ability to load a pipe 14:30
+** Load menu item (20m) DONE
+** Event triggered on click + ctrl+o/cmd+o (15m) DONE
+** show file system picker (15m) DONE
+** save filename to session after load (10m)
+** Create and render nodes (60m)
+** Create and render connections (60m)
+** Do run (20m)
+** Clear things in case there is already a mold on screen
 
-* Ability to load a pipe
-** Save menu item
-** Event triggered on click + ctrl+o/cmd+o
-** show file system picker
-** load filename on click
-** Render pipes and do run
+* Run (5h)
+  * First do validation call.
+  * If no errors, process the mold.
+  * On errors, break the process and return
+  * run from UI on clicking the play button
 
-* Ability to re-save pipe as
-** Save as.. menu item
-** Event triggered on click
-** Show file picker
-** Store filename
-** Save coordinates for pipe
+* Tests of basic UI
+
+* NODE - CSV output
+  * write tests for UI
+  * write tests for backend
+  * Save dialog instead of open
+
+* NODE - CSV input:
+  * write tests for UI
+ 
+* NODE - drop column
+  * write tests for UI
+  * write tests for backend
 
 * Other cleanup:
   * wrap samples in scrollbars when necessary
+
+
 
 
 #### Milestone 10: Error handling (4w)
@@ -118,6 +108,7 @@
 * NODE - Squash (ie. merge all rows, merging the content by some match formula/join) - should we allow people to uniquify on a different row in the process. So you could eg. get the sum age of all women and all men separately, by squashing the age column with "+" while uniquefying the gender column.
 * NODE - Squash to array
 * NODE - Split column to multiple **MVP**
+* NODE - merge multiple columns into single column: "fname" "lname" -> "fullname"
 
 CONTENT MANIPULATION:
 * NODE - manipulation of data in a column (eg. ALL CAPS, search/replace) **MVP**
@@ -137,13 +128,8 @@ INPUT/OUTPUT NODES:
 * NODE - Excel output **MVP**
 * NODE - Console output: **MVP**
 
-* Create function to merge two columns: "fname" "lname" -> "fullname"
-* Extend drop column function to be able to drop multiple columns (ie. take list of column names)
-* Create data -> merge("fname", "lname" -> "fullname") -> drop("fname", "lname") -> stdout
 * Multi input node
 * Macro implementation
-* Wrap frontend in atom electron or the like
-* * What to do about data-types. This is important in some connections, but not others 
 * Tutorial
 * Højreklik menuer
 
@@ -155,3 +141,4 @@ INPUT/OUTPUT NODES:
 * Test for laziness in all nodes: both that they are lazy, and that they dont break if handed a lazy table
 * Turn off data logging when running proper
 * Load testing
+* Configuration for molder skal gemmes i en configurationsfil (såsom antallet af sample linier, sidste åbnet fil (så den kan blive genåbnet), listen over de sidste X filer man har åbnet, preferences ift. setup/beskeder/osvosv) - evt se electron-json-storage

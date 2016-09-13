@@ -40,6 +40,7 @@ define(['backbone', 'session', 'jsplumb', './NodePrototypeView', '../node/nodeVi
                         revert: false,
                         stop: function (evt, ui) {
                             new NodeView({
+                                session: session,
                                 position: ui.position,
                                 nodeType: nodeType
                             });

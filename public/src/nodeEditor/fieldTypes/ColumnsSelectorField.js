@@ -23,8 +23,9 @@ define(["backbone", "globals", "jsplumb",
         var fieldTemplate = $(this.template({
             id: this.fieldName,
             name: this.fieldInfo.name,
-            value: this.node.fields[this.fieldName]
         }));
+        this.selectedColumns = this.node.fields[this.fieldName] || [];
+
         this.$el.html(fieldTemplate);
         this.$(".selectpicker").selectpicker();
 
